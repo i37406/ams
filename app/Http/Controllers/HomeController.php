@@ -34,6 +34,14 @@ class HomeController extends Controller
 
     public function userUpdate(request $request)
     {
-        dd($request->all());
+        // dd($request->all());
+        if(($request->status) == "Student")
+        {
+            $request->status = 0;
+        }
+        else{
+            $request->status =1;
+        }
+        print_r ($request->status);
     }
 }

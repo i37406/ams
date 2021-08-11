@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -29,5 +30,10 @@ class HomeController extends Controller
     public function handleAdmin()
     {
         return view('handleAdmin');
+    }
+
+    public function userUpdate(request $request)
+    {
+        dd($request->all());
     }
 }

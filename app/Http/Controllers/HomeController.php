@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\storage;
 
@@ -57,6 +58,40 @@ class HomeController extends Controller
         ]);
 
         return redirect(route('home'))->with('message','Updated Sucessfull');
+    }
+
+    public function updateImage(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $filename= $request->image->getClientOriginalName();
+            $extension = $request->image->getClientOriginalExtension();
+            if($extension == 'jpg' || $extension == 'png'){
+                if(auth()->user()->avatar){
+                storage::delete('/public/images/'. auth()->user()->avatar );
+                }
+                $request->image->storeAs('images', $filename, 'public');
+                auth()->User()->update([
+                    'avatar' => $filename
+                ]);
+                return redirect()->back()->with('message' , 'Image Updated Sucessfully');
+                }
+                else
+               {
+               return redirect()->back()->with('error' , 'Upload image only(.jpg or .png).');
+               }
+        }else{
+            return redirect()->back()->with('error' , 'Select Image first');
+        }
+    }
+
+    public function handleAttendance(Request $request){
+        // dd ($request->all());
+        // $array = ['product' => ['name' => 'Desk', 'price' => 100]];
+        if(Arr::has($request, 'attend')){
+            return redirect(route('home'))->with('message','Present Marked Successfully');
+        }else{
+            return redirect(route('home'))->with('message','Absent Marked Successfully');
+        }
     }
 
 }

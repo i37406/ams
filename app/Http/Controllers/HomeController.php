@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\storage;
 
 class HomeController extends Controller
 {
@@ -34,14 +35,28 @@ class HomeController extends Controller
 
     public function userUpdate(request $request)
     {
-        // dd($request->all());
-        if(($request->status) == "Student")
-        {
-            $request->status = 0;
+        if ($request->hasFile('image')) {
+            $filename= $request->image->getClientOriginalName();
+            $extension = $request->image->getClientOriginalExtension();
+            if($extension == 'jpg' || $extension == 'png'){
+                if(auth()->user()->avatar){
+                storage::delete('/public/images/'. auth()->user()->avatar );
+                }
+                $request->image->storeAs('images', $filename, 'public');
+                }
+                else
+               {
+               return redirect()->back()->with('error' , 'Upload image only(.jpg or .png).');
+               }
         }
-        else{
-            $request->status =1;
-        }
-        print_r ($request->status);
+             auth()->User()->update([
+            'dob' => $request->dob,
+            'address' => $request->address,
+            'cell' => $request->cellNo,
+            'avatar' => $filename
+        ]);
+
+        return redirect(route('home'))->with('message','Updated Sucessfull');
     }
+
 }

@@ -81,14 +81,15 @@
                     <div class="container-sm m-4">
                         <div class="row justify-content-center">
                             <div class="col align-self-center">
-                                <form method="POST" action="">
+                                <form method="POST" action="{{route('apply.leave')}}" >
+                                    @csrf
                                     <div class="col-md-12">
                                         <label for="address" class="form-label">Reason</label>
                                         <input type="text" class="form-control" id="reason" name="reason" placeholder="Give reason. Why apply Leave?">
                                       </div>
                                       <div class="col-md-6">
                                         <label for="From" class="form-label">From</label>
-                                        <input type="text" class="form-control" id="sdate" name="date" value="" placeholder="yyyy-mm-dd">
+                                        <input type="text" class="form-control" id="sdate" name="sdate" value="" placeholder="yyyy-mm-dd">
                                       </div>
                                       <div class="col-md-6">
                                         <label for="To" class="form-label">To</label>

@@ -110,7 +110,7 @@ class AttendanceController extends Controller
     {
         //
     }
-    function today($format=null)
+    public function today($format=null)
     {
 	    $format = $format ? $format:'Y-m-d';
 	    return Carbon::today()->format($format);

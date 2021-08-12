@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Attendance;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\storage;
 
 class HomeController extends Controller
@@ -84,6 +87,39 @@ class HomeController extends Controller
         }
     }
 
-    
+    public function applyLeave(Request $request)
+    {
+        $s_date= Carbon::parse($request->sdate);
+        $e_date= Carbon::parse($request->edate);
+        $n_date=$s_date;
+        $t_days = 0;
+        if($s_date > $e_date || $s_date < now()){
+            return redirect(route('home'))->with('error','Leave Duration is invalid');
+        }else{
+            $check = DB::table('attendances')
+            ->where('user_id', '=', auth()->user()->id)
+            ->where('leave_apply_status', '=', 1)
+            ->where('leave_approved_status', '=', 0)
+            ->count();
+            if($check == 0){
+                while ($n_date <= $e_date) {
+                    $data = new Attendance;
+                    $data->user_id = auth()->user()->id;
+                    $data->attendance_date = $n_date;
+                    $data->leave_reason = $request->reason;
+                    $data->leave_apply_status = '1';
+                    $data->save();
+                    $n_date->addDay();
+                    $t_days++;
+                    }
+                    return redirect(route('home'))->with('message','Your Leave Application for '.$t_days.' day(s) submitted sucessfully');
+            }else{
+                return redirect(route('home'))->with('error','You Already Apply for Leave. For more Assistant contact with supervisior');
+            }
+            
+            
+        
+        }
+    }
 
 }

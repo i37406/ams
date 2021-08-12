@@ -17,7 +17,7 @@ class CreateAttendanceTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('attendance');
+            $table->string('attendance')->nullable();
             $table->string('leave_reason')->nullable();
             $table->boolean('leave_apply_status')->default(false);
             $table->boolean('leave_approved_status')->default(false);

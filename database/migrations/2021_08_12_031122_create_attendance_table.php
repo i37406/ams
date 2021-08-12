@@ -21,6 +21,7 @@ class CreateAttendanceTable extends Migration
             $table->string('leave_reason')->nullable();
             $table->boolean('leave_apply_status')->default(false);
             $table->boolean('leave_approved_status')->default(false);
+            $table->boolean('leave_disapprove_status')->default(false);
             $table->boolean('seen_status')->default(false);
             $table->timestamp('attendance_date')->nullable();
             $table->timestamps();

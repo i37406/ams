@@ -34,7 +34,23 @@ class HomeController extends Controller
 
     public function handleAdmin()
     {
-        return view('handleAdmin');
+        $data = auth()->User();
+        if ($data->is_admin){
+            $data->is_admin = "Administrator";
+        }else{
+            $data->is_admin = "Student";
+        }
+
+        $users = DB::table('users')
+            ->join('attendances', 'users.id', '=', 'attendances.user_id')
+            ->where('attendances.leave_apply_status', '=', '1')
+            ->where('attendances.leave_approved_status', '=', '0')
+            ->where('attendances.leave_disapprove_status', '=', '0')
+            ->select('*')
+            ->get();
+        
+            // dd($users);
+        return view('handleAdmin',compact(['data', 'users']));
     }
 
     public function userUpdate(request $request)

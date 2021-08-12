@@ -95,9 +95,24 @@ class AttendanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,  $id)
     {
-        //
+        if(Arr::has($request, ['approved','disaprove'])){
+            return redirect(route('admin.route'))->with('error','Please Select one choice at a time Approved or Disapproved.');
+        } else if(Arr::has($request, ['approved'])){
+            $data = Attendance::find($id);
+            $data->leave_approved_status = 1;
+            $data->save();
+            return redirect(route('admin.route'))->with('message','Approved successfully');       
+        } else if(Arr::has($request, ['disaprove'])){
+            $data = Attendance::find($id);
+            $data->leave_disapprove_status = 1;
+            $data->save();
+            return redirect(route('admin.route'))->with('message','Disapproved successfully');
+        }
+        else{
+            return redirect(route('admin.route'))->with('error','Select one Approved/Disapproved');
+        }
     }
 
     /**

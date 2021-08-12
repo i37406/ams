@@ -16,6 +16,7 @@ class Attendance extends Model
         'leave_reason',
         'leave_apply_status',
         'leave_approved_status',
+        'leave_disapprove_status',
         'seen_status',
         'attendance_date',
     ];

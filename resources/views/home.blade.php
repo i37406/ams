@@ -6,10 +6,11 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header" style="background-color: rgb(176, 203, 245);  text-align: center;  font-family: Times New Roman;"><h2>Student Dashboard</h2></div>
+                <x-alert /> 
                 <div class="card-header" style="background-color: rgb(217, 224, 233); "><h5>Update Personal Information</h5></div>
 
                 <div class="card-body" style="background-color: rgb(199, 202, 207); ">
-                    <x-alert /> 
+                   
                     {{-- @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -36,7 +37,7 @@
                     <div class="container-sm m-4">
                         <div class="row justify-content-center">
                             <div class="col align-self-center">
-                                <form method="POST" action="{{route('attendance')}}">
+                                <form method="POST" action="{{route('attendance.store')}}">
                                     @csrf
                                     <div class="col-sm-12">
                                     <div class="form-check">

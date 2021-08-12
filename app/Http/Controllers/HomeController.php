@@ -84,14 +84,6 @@ class HomeController extends Controller
         }
     }
 
-    public function handleAttendance(Request $request){
-        // dd ($request->all());
-        // $array = ['product' => ['name' => 'Desk', 'price' => 100]];
-        if(Arr::has($request, 'attend')){
-            return redirect(route('home'))->with('message','Present Marked Successfully');
-        }else{
-            return redirect(route('home'))->with('message','Absent Marked Successfully');
-        }
-    }
+    
 
 }

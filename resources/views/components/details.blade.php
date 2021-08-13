@@ -39,21 +39,22 @@
                 
                 <div class="col-md-6">
                   <label for="status" class="form-label">Date of Birth</label>
-                  <input type="text" class="form-control" id="dob" name="dob" value="" placeholder="yyyy-mm-dd">
+                  {{-- <input type="text" class="form-control" id="dob" name="dob" value="" placeholder="yyyy-mm-dd"> --}}
+                  <input type="text" class="form-control datetimepicker1" name="dob" value="{{$data->dob}}" required>
                 </div>
                 <div class="col-md-6">
                   <label for="address" class="form-label">Address</label>
-                  <input type="text" class="form-control" id="address" name="address" placeholder="1234 Main St">
+                  <input type="text" class="form-control" id="address" name="address" placeholder="1234 Main St" value="{{$data->address}}" required>
                 </div>
                
                 
                 <div class="col-md-6">
                   <label for="cellNo" class="form-label">Contact No</label>
-                  <input type="text" class="form-control" id="cellNo" name="cellNo">
+                  <input type="text" class="form-control" id="cellNo" name="cellNo" value="{{$data->cell}}" required>
                 </div>
                 <div class="col-md-6">
                   <label for="image" class="form-label">Image</label>
-                  <input type="file" class="form-control" id="image" name="image">
+                  <input type="file" class="form-control" id="image" name="image" required>
                 </div>
                  <div class="col-sm-12">
                   <button type="submit" class="btn btn-primary">Save</button>

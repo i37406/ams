@@ -109,13 +109,13 @@ class HomeController extends Controller
         $e_date= Carbon::parse($request->edate);
         $n_date=$s_date;
         $t_days = 0;
-        if($s_date > $e_date || $s_date < now()){
-            return redirect(route('home'))->with('error','Leave Duration is invalid');
-        }else{
             $check = DB::table('attendances')
             ->where('user_id', '=', auth()->user()->id)
             ->where('leave_apply_status', '=', 1)
-            ->where('leave_approved_status', '=', 0)
+            ->Where(function($query) {
+                $query->where('leave_approved_status', '=', 0)
+                      ->where('leave_disapprove_status', '=', 0);
+            })
             ->count();
             if($check == 0){
                 while ($n_date <= $e_date) {
@@ -135,7 +135,7 @@ class HomeController extends Controller
             
             
         
-        }
+        
     }
 
 }

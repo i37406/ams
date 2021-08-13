@@ -57,7 +57,7 @@
                                     <div class="col-sm-12">
                                         <div class="col-md-6">
                                             <label for="image" class="form-label">Update Image</label>
-                                            <input type="file" class="form-control" id="image" name="image">
+                                            <input type="file" class="form-control" id="image" name="image" required>
                                           </div>
                                     </div>
                                    
@@ -85,15 +85,15 @@
                                     @csrf
                                     <div class="col-md-12">
                                         <label for="address" class="form-label">Reason</label>
-                                        <input type="text" class="form-control" id="reason" name="reason" placeholder="Give reason. Why apply Leave?">
+                                        <input type="text" class="form-control" id="reason" name="reason" placeholder="Give reason. Why apply Leave?" required>
                                       </div>
                                       <div class="col-md-6">
                                         <label for="From" class="form-label">From</label>
-                                        <input type="text" class="form-control" id="sdate" name="sdate" value="" placeholder="yyyy-mm-dd">
+                                        <input type="text" class="form-control datetimepicker" name="sdate" >
                                       </div>
                                       <div class="col-md-6">
                                         <label for="To" class="form-label">To</label>
-                                        <input type="text" class="form-control" id="edate" name="edate" value="" placeholder="yyyy-mm-dd">
+                                        <input type="text" class="form-control datetimepicker" name="edate" >
                                       </div>
                                       <div class="col-sm-12">
                                         <button type="submit" class="btn btn-primary">Apply</button>
@@ -110,4 +110,22 @@
 </div>
 
 
+@endsection
+@section('js')
+<script type="text/javascript">
+    $(function () {
+        $('.datetimepicker').datetimepicker({
+          format: 'YYYY-MM-DD',
+          daysOfWeekDisabled: [0,6],
+          minDate:new Date()
+        });
+
+    });
+    $(function () {
+        $('.datetimepicker1').datetimepicker({
+          format: 'YYYY-MM-DD'
+        });
+
+    });
+</script>
 @endsection

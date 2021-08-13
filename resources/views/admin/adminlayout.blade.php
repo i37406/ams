@@ -7,7 +7,7 @@
     <a class="nav-link active"  href="{{route('admin.leave')}}">Leave Applications</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link active"  href="{{route('admin.leave')}}">Students</a>
+    <a class="nav-link active"  href="{{route('admin.students')}}">Students</a>
   </li>
 @endsection
 @section('content')

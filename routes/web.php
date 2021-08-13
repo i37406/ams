@@ -22,12 +22,18 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('admin/home', [App\Http\Controllers\HomeController::class, 'handleAdmin'])->name('admin.route')->middleware('admin');
 Route::post('/updateDetails', [App\Http\Controllers\HomeController::class, 'userUpdate'])->name('user.update');
-Route::post('/updateImage', [App\Http\Controllers\HomeController::class, 'updateImage'])->name('updateUserImage');
 Route::post('/leave', [App\Http\Controllers\HomeController::class, 'applyLeave'])->name('apply.leave');
 Route::resource('attendance', AttendanceController::class);
+//Admin Routes
+//1. For Leave approve/disapprove use resource route of AttendanceController
+Route::get('admin/home', [App\Http\Controllers\HomeController::class, 'handleAdmin'])->name('admin.route')->middleware('admin');
 Route::get('admin/home/leaves', [App\Http\Controllers\HomeController::class, 'handleLeaves'])->name('admin.leave')->middleware('admin');
+Route::get('admin/home/students', [App\Http\Controllers\HomeController::class, 'viewStudents'])->name('admin.students')->middleware('admin');
+//use by admin & student
+Route::post('/updateImage', [App\Http\Controllers\HomeController::class, 'updateImage'])->name('updateUserImage');
+
+
 
 
 

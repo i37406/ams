@@ -121,16 +121,16 @@ class HomeController extends Controller
                     return redirect(route('home'))->with('message','Your Leave Application for '.$t_days.' day(s) submitted sucessfully');
             }else{
                 return redirect(route('home'))->with('error','You Already Apply for Leave. For more Assistant contact with supervisior');
-            }
-            
-            
-        
-        
+            }    
     }
 
     public function handleLeaves()
     {
         return view('admin.leaves');
+    }
+    public function viewStudents()
+    {
+        return view('admin.students');
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\User;
 use Illuminate\View\Component;
 
 class student extends Component
@@ -23,6 +24,8 @@ class student extends Component
      */
     public function render()
     {
-        return view('components.student');
+        $data = User::all();
+        // dd($data);
+        return view('components.student',compact('data'));
     }
 }

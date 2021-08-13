@@ -29,7 +29,7 @@
    </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-black shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     Attendance Management System
@@ -60,10 +60,13 @@
                                 </li>
                             @endif
                         @else
+                        @section('navbar')
+                        @show
+                        
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
-                                    <img src="{{asset('/storage/images/'.Auth::user()->avatar) }}" alt="avatar" width="40">
+                                    <img src="{{asset('/storage/images/'.Auth::user()->avatar) }}" alt="avatar" width="40" style="border-radius: 50%;">
                                 </a>
                                 
 

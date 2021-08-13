@@ -27,6 +27,7 @@ Route::post('/updateDetails', [App\Http\Controllers\HomeController::class, 'user
 Route::post('/updateImage', [App\Http\Controllers\HomeController::class, 'updateImage'])->name('updateUserImage');
 Route::post('/leave', [App\Http\Controllers\HomeController::class, 'applyLeave'])->name('apply.leave');
 Route::resource('attendance', AttendanceController::class);
+Route::get('admin/home/leaves', [App\Http\Controllers\HomeController::class, 'handleLeaves'])->name('admin.leave')->middleware('admin');
 
 
 

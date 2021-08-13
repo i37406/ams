@@ -1,5 +1,12 @@
 @extends('layouts.app')
-
+@section('navbar')
+<li class="nav-item">
+  <a class="nav-link actine"  href="{{route('admin.route')}}">Home</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link active"  href="{{route('admin.leave')}}">Leave Applications</a>
+</li>
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -49,54 +56,36 @@
 </div>
 
 <div class="container my-4">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card"> 
-                <div class="card-header" style="background-color: rgb(217, 224, 233); "><h5>Leave Applications</h5></div>
+  <div class="row justify-content-center">
+      <div class="col-md-12">
+          <div class="card">
+              <div class="card-header" style="background-color: rgb(176, 203, 245);"><h5>Image Update</h5></div>
 
-                <div class="card-body" style="background-color: rgb(199, 202, 207); ">                   
-                    <div class="container-sm">
-                        <div class="row">
-                          <div class="col align-self-start">
-                            <table class="table table-striped">
-                              <thead>
-                                <tr>
-                                <td>Student Name</td>
-                                <td>Reason</td>
-                                <td>Date</td>
-                                <td>Action</td>
-                                </tr>
-                              </thead>
-                              @foreach ($users as $item)
-                              <tbody>
-                              <tr >
-                                <td>{{$item->name}}</td>
-                                <td>{{$item->leave_reason}}</td>
-                                <td>{{$item->attendance_date}}</td>
-                                <td><form method="post" action="{{route('attendance.update',$item->id)}}">@csrf @method('put')
-                                  <input class="form-check-input" type="checkbox" value="Approved"  name="approved" checked>
-                                  <label class="form-check-label" for="flexCheckDefault">
-                                    Approved
-                                  </label>
-                                  <input type="text" name="id" value="{{$item->id}}" hidden>
-                                  <input class="form-check-input" type="checkbox" value="Disapproved"  name="disaprove" >
-                                  <label class="form-check-label" for="flexCheckDefault">
-                                    Disapproved
-                                  </label>
-                                  <button type="submit" class="btn btn-sm btn-primary">Done</button>
-                                  </form></td>
-                              </tr>
-                              <tbody>
-                               @endforeach
-                              </table>
-                            
+              <div class="card-body" style="background-color: rgb(199, 202, 207); ">
+                 
+                  <div class="container-sm m-4">
+                      <div class="row justify-content-center">
+                          <div class="col align-self-center">
+                            <form method="POST" action="{{route('updateUserImage')}}" enctype="multipart/form-data">
+                              @csrf
+                              <div class="col-sm-12">
+                                  <div class="col-md-6">
+                                      <label for="image" class="form-label">Update Image</label>
+                                      <input type="file" class="form-control" id="image" name="image" required>
+                                    </div>
+                              </div>
+                             
+                                <div class="col-sm-12">
+                                  <button type="submit" class="btn btn-primary m-4">Update</button>
+                                </div>
+                          </form>
                           </div>
-                        </div>
-                          
                       </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+     
+  </div>
 </div>
 @endsection

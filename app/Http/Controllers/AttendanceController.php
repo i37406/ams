@@ -102,6 +102,7 @@ class AttendanceController extends Controller
         } else if(Arr::has($request, ['approved'])){
             $data = Attendance::find($id);
             $data->leave_approved_status = 1;
+            $data->attendance = 'L';
             $data->save();
             return redirect(route('admin.route'))->with('message','Approved successfully');       
         } else if(Arr::has($request, ['disaprove'])){

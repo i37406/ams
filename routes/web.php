@@ -30,6 +30,8 @@ Route::resource('attendance', AttendanceController::class);
 Route::get('admin/home', [App\Http\Controllers\HomeController::class, 'handleAdmin'])->name('admin.route')->middleware('admin');
 Route::get('admin/home/leaves', [App\Http\Controllers\HomeController::class, 'handleLeaves'])->name('admin.leave')->middleware('admin');
 Route::get('admin/home/students', [App\Http\Controllers\HomeController::class, 'viewStudents'])->name('admin.students')->middleware('admin');
+Route::get('admin/home/manageAttendance', [App\Http\Controllers\HomeController::class, 'manageAttendance'])->name('admin.attendance')->middleware('admin');
+Route::post('admin/home/manageAttendance', [App\Http\Controllers\HomeController::class, 'populateAttendance'])->name('admin.populate')->middleware('admin');
 //use by admin & student
 Route::post('/updateImage', [App\Http\Controllers\HomeController::class, 'updateImage'])->name('updateUserImage');
 

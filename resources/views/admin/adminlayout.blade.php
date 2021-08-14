@@ -9,6 +9,9 @@
   <li class="nav-item">
     <a class="nav-link active"  href="{{route('admin.students')}}">Students</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link active"  href="{{route('admin.attendance')}}">Manage Attaendance</a>
+  </li>
 @endsection
 @section('content')
 <div class="container">
@@ -34,3 +37,5 @@
     </div>
 </div>
 @endsection
+
+

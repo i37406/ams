@@ -39,6 +39,35 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
+        //If marked by Admin
+        if(Arr::has($request, 's_id')){
+            // dd($request->all());
+            $check = DB::table('attendances')
+            ->where('user_id', '=',$request->s_id)
+            ->where('attendance_date', '=', today())
+            ->get();
+
+    if($check->isEmpty()){
+        $data = new Attendance;
+        if(Arr::has($request, 'attend')){
+            $data->attendance = $request->attend;
+            $message = "Present";
+        }else{               
+            $data->attendance = 'A';
+            $message = "Absent";                
+        } 
+        
+        $data->user_id = $request->s_id;
+        $data->attendance_date = today();
+        $data->save();
+        return redirect()->back()->with('message',$message.' Marked Successfully');
+        
+    }else{
+        return redirect()->back()->with('error','Today Attendance already marked. For further action you are able to update it.');
+    }
+        }
+        //if marked by student
+        else{
         $check = DB::table('attendances')
                 ->where('user_id', '=', auth()->user()->id)
                 ->where('attendance_date', '=', today())
@@ -61,7 +90,9 @@ class AttendanceController extends Controller
             
         }else{
             return redirect(route('home'))->with('error','You Already Marked Attendance for Today');
-        }            
+        }  
+        
+    }
         
         
     }
@@ -85,7 +116,10 @@ class AttendanceController extends Controller
      */
     public function edit($id)
     {
-        //
+        // dd($id);
+        $data = Attendance::where('id', $id)->get();
+        // dd($data);
+        return view('admin.attendanceEdit',compact('data'));
     }
 
     /**
@@ -97,6 +131,16 @@ class AttendanceController extends Controller
      */
     public function update(Request $request,  $id)
     {
+       
+        if(Arr::has($request, ['date'])){
+            // dd($request->all());
+            $data = Attendance::find($id);
+            $data->leave_approved_status = 0;
+            $data->attendance = $request->attend;
+            $data->attendance_date = $request->date;
+            $data->save();
+            return redirect(route('admin.populate'))->with('message','Updated Sucessfully!!');
+        }else{
         if(Arr::has($request, ['approved','disaprove'])){
             return redirect(route('admin.route'))->with('error','Please Select one choice at a time Approved or Disapproved.');
         } else if(Arr::has($request, ['approved'])){
@@ -114,6 +158,7 @@ class AttendanceController extends Controller
         else{
             return redirect(route('admin.route'))->with('error','Select one Approved/Disapproved');
         }
+    }
     }
 
     /**

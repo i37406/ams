@@ -48,7 +48,7 @@ class HomeController extends Controller
         if ($request->hasFile('image')) {
             $filename= $request->image->getClientOriginalName();
             $extension = $request->image->getClientOriginalExtension();
-            if($extension == 'jpg' || $extension == 'png'){
+            if($extension == 'jpg' || $extension == 'png' || $extension == 'jpeg'){
                 if(auth()->user()->avatar){
                 storage::delete('/public/images/'. auth()->user()->avatar );
                 }
@@ -74,7 +74,7 @@ class HomeController extends Controller
         if ($request->hasFile('image')) {
             $filename= $request->image->getClientOriginalName();
             $extension = $request->image->getClientOriginalExtension();
-            if($extension == 'jpg' || $extension == 'png'){
+            if($extension == 'jpg' || $extension == 'png' || $extension == 'jpeg'){
                 if(auth()->user()->avatar){
                 storage::delete('/public/images/'. auth()->user()->avatar );
                 }
@@ -132,5 +132,20 @@ class HomeController extends Controller
     {
         return view('admin.students');
     }
+    public function manageAttendance()
+    {
+        $data = User::all();
+        // dd($data);
+        return view('admin.manageAttendance',compact('data'));
+    }
+    public function populateAttendance(Request $request)
+    {
+        
+        $user= User::find($request->s_id);
+        $data = Attendance::where('user_id', $request->s_id)->orderBy('attendance_date','DESC')->get();
+        // dd($data);
+        return view('admin.population',compact(['data','user']));
+    }
+    
 
 }

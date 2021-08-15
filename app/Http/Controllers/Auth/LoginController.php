@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -52,11 +53,24 @@ class LoginController extends Controller
             if (auth()->user()->is_admin == 1) {
                 return redirect()->route('admin.route');
             }else{
+                $user = Auth()->User();
+                $user->update([
+                    'is_login' => 1
+                ]);
                 return redirect()->route('home');
             }
         }else{
             return redirect()->route('login')
                 ->with('error','Email & Password are incorrect.');
         }     
+    }
+    public function logout() {
+        $user = Auth()->User();
+        $user->update([
+            'is_login' => 0
+        ]);
+        Auth::logout();
+    
+        return redirect('login');
     }
 }

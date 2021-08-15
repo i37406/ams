@@ -4,6 +4,8 @@
         <tr>
           <th>Sr</th>
           <th>Student Name</th>
+          <th>Status</th>
+          <th>Grade</th>
           <th>Email</th>
           <th>Address</th>
           <th>Cell</th>
@@ -26,13 +28,26 @@
         <tr>
           <td>{{++$i;}}</td>
           <td>{{$index->name}}</td>
+          @if ($index->is_login == 1)
+            <td class="table-success">Online</td>
+            @else
+            <td>Offline</td>
+          @endif
+          <td>{{$index->grade}}</td>
           <td>{{$index->email}}</td>
           <td>{{$index->address}}</td>
           <td>{{$index->cell}}</td>
           <td>{{substr($index->dob,0,11)}}</td>
           <td>{{substr($index->created_at,0,11)}}<br>{{$index->created_at->diffForHumans()}}</td>
           <td> <img src="{{asset('/storage/images/'.$index->avatar) }}" alt="avatar" width="40"></td>
-          <td></td>
+          <td>
+            <form action="{{route('admin.grade')}}" method="POST">
+              @csrf
+              <input type="text" name="s_id" value="{{$index->id}}" hidden>
+              <input type="text" name="s_name" value="{{$index->name}}" hidden>
+              <button class="btn btn-sm btn-primary">Grade</button>
+            </form>
+          </td>
         </tr>
         @empty
             <tr>

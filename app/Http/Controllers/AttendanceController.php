@@ -131,7 +131,7 @@ class AttendanceController extends Controller
      */
     public function update(Request $request,  $id)
     {
-       
+       //Update Attendance
         if(Arr::has($request, ['date'])){
             // dd($request->all());
             $data = Attendance::find($id);
@@ -141,6 +141,7 @@ class AttendanceController extends Controller
             $data->save();
             return redirect(route('admin.populate'))->with('message','Updated Sucessfully!!');
         }else{
+            //Approved Leaves
         if(Arr::has($request, ['approved','disaprove'])){
             return redirect(route('admin.route'))->with('error','Please Select one choice at a time Approved or Disapproved.');
         } else if(Arr::has($request, ['approved'])){
@@ -169,7 +170,11 @@ class AttendanceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // dd($id);
+        // $id->delete();
+        $user=Attendance::find($id);
+        $user->delete();
+		return redirect()->back()->with('message',' Deleted successfully');
     }
     public function today($format=null)
     {

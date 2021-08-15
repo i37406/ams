@@ -12,7 +12,7 @@
     <tr >
       <td>{{$item->name}}</td>
       <td>{{$item->leave_reason}}</td>
-      <td>{{$item->attendance_date}}</td>
+      <td>{{substr($item->attendance_date,0,11)}}</td>
       <td><form method="post" action="{{route('attendance.update',$item->id)}}">@csrf @method('put')
         <input class="form-check-input" type="checkbox" value="Approved"  name="approved" >
         <label class="form-check-label" for="flexCheckDefault">

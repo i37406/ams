@@ -1,5 +1,5 @@
 @extends('admin.adminlayout')
-@section('p_head','Student Name : '.$user->name)
+@section('p_head','Student Name : '.$user->name.' attendance report '.$str)
 @section('p_content')
 <div class="">          
     <table class="table table-bordered">
@@ -7,7 +7,7 @@
         <tr>
           <th>Date</th>
           <th>Attendance Status</th>
-          <th colspan="2">Action</th>
+
         </tr>
       </thead>
       <tbody>
@@ -21,18 +21,9 @@
 
         <tr>
           <td>{{substr($index->attendance_date,0,11)}}</td>
+          {{-- <td>{{Carbon::createFromFormat('Y-m-d H:i:s', $index->attendance_date)->format('d-m-Y')}}</td> --}}
           <td>{{$index->attendance}}</td>
-          <td>
-            <a class="btn btn-sm btn-primary" href="{{route('attendance.edit',$index->id)}}" >Update</a>
-          </td>
-          <td>
-            <form  method="POST" action="{{route('attendance.destroy',$index->id)}}">
-              @csrf
-              @method('delete')
-              <button class="btn btn-sm btn-primary  align-left ">Delete</button>
-            </form>
-            
-        </td>
+          
         </tr>
         @empty
             <tr>
@@ -41,5 +32,6 @@
         @endforelse
       </tbody>
     </table>
+    <a href="{{route('admin.reports')}}" class="btn btn-primary my-3">Back</a>
     </div>
 @endsection

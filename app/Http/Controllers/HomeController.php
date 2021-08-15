@@ -40,7 +40,7 @@ class HomeController extends Controller
         }else{
             $data->is_admin = "Student";
         }
-        return view('handleAdmin',compact(['data']));
+        return view('admin.dashboard',compact(['data']));
     }
 
     public function userUpdate(request $request)
@@ -138,14 +138,128 @@ class HomeController extends Controller
         // dd($data);
         return view('admin.manageAttendance',compact('data'));
     }
+    //generate Report for specific User
     public function populateAttendance(Request $request)
     {
         
+        if(Arr::has($request, 'sdate')){
+            // dd($request->all());
+            $s_date= Carbon::parse($request->sdate);
+            $e_date= Carbon::parse($request->edate);
+            // $s_date->subDays(1);
+            // $e_date->addDays(1);
+            $str = ' From '.$request->sdate.' To '.$request->edate;
+            $user= User::find($request->s_id);
+            $data = Attendance::where('user_id', $request->s_id)
+                                ->whereBetween('attendance_date', [$s_date, $e_date])
+                                ->orderBy('attendance_date','DESC')
+                                ->get();
+                                // dd($e_date);
+            
+            return view('admin.specificStuReport',compact(['data','user','str']));
+        }else{
         $user= User::find($request->s_id);
         $data = Attendance::where('user_id', $request->s_id)->orderBy('attendance_date','DESC')->get();
-        // dd($data);
-        return view('admin.population',compact(['data','user']));
+        return view('admin.population',compact(['data','user']));}
     }
+    
+    public function manageReports()
+    {
+        
+        $users = DB::table('attendances')
+            ->join('users', 'users.id', '=', 'attendances.user_id')
+            ->select('users.name','users.id')
+            ->selectRaw('COUNT(attendances.attendance) as TotalAttendance ')
+            ->selectRaw("count(case when attendance = 'P' then 1 end) as present")
+            ->selectRaw("count(case when attendance = 'A' then 1 end) as absent")
+            ->selectRaw("count(case when attendance = 'L' then 1 end) as leav")
+            ->groupBy('users.name','users.id')
+            ->get();
+            // dd($users);
+        return view('admin.reports',compact(['users']));
+    }
+    
+    public function allUserReportRange(Request $request)
+    {
+        $s_date= Carbon::parse($request->sdate);
+        $e_date= Carbon::parse($request->edate);
+        $s_date->subDays(1);
+        $e_date->addDays(1);
+        $str = ' From '.$request->sdate.' To '.$request->edate;
+        // $data = Attendance::join('users', 'users.id', '=', 'attendances.user_id')
+        //                     ->whereBetween('attendance_date', [$s_date, $e_date])
+        //                     ->groupBy('users.name')
+        //                     ->get();
+        $data = User::join('attendances', 'user_id', '=', 'users.id')
+                            ->select('users.name','users.id','attendances.attendance','attendances.attendance_date')
+                            ->whereBetween('attendance_date', [$s_date, $e_date])
+                            ->orderBy('users.name')
+                            ->get()
+                            ->groupBy('users.name');
+                            // dd($data);
+        
+        return view('admin.reportRange',compact(['data','str']));
+       
+    }
+
+    //Student Function
+    public function seeAttendance()
+    {
+        // dd(auth()->user()->name);
+        $user_name = auth()->user()->name;
+        $data = DB::table('attendances')
+            ->select('user_id')
+            ->selectRaw('COUNT(attendances.attendance) as TotalAttendance ')
+            ->selectRaw("count(case when attendance = 'P' then 1 end) as present")
+            ->selectRaw("count(case when attendance = 'A' then 1 end) as absent")
+            ->selectRaw("count(case when attendance = 'L' then 1 end) as leav")
+            ->where('user_id',auth()->user()->id)
+            ->groupBy('user_id')
+            ->get();
+
+            $leave = DB::table('attendances')
+            ->select('user_id','leave_reason','leave_approved_status','leave_disapprove_status','attendance_date')
+            ->where('user_id',auth()->user()->id)
+            ->where('leave_apply_status','1')
+            ->paginate(10);
+            // dd($leave);
+            $d_atten = DB::table('attendances')
+            ->select('user_id','attendance','attendance_date')
+            ->where('user_id',auth()->user()->id)
+            ->where('attendance','!=','')
+            ->orderBy('attendance_date','DESC')
+            ->paginate(10);
+            return view('attendanceStatus',compact(['data','leave','user_name','d_atten']));
+    }
+
+    public function gradeStudent(Request $request)
+    {
+        // dd($request->all());
+        $grade= '';
+        $check= DB::table('attendances')
+                    ->where('user_id',$request->s_id)
+                    ->where('attendance','P')
+                    ->count();
+                    // dd($check);
+                    if($check >=26){
+                        $grade='A';
+                    }else if($check >=20){
+                        $grade='B';
+                    }else  if($check >=15){
+                        $grade='C';
+                    }else  if($check >=10){
+                        $grade='D';
+                    }else  if($check >=5){
+                        $grade='F';
+                    }else  if($check >=1){
+                        $grade='E';
+                    }
+                    $update_grade = DB::table('users')
+                            ->where('id', $request->s_id)
+                            ->update(['grade' => $grade]);
+                    return redirect()->back()->with('message','Grade '.$grade.' asigned to '.$request->s_name.'.');
+    }
+
     
 
 }

@@ -1,5 +1,12 @@
 @extends('layouts.app')
-
+@section('navbar')
+<li class="nav-item">
+    <a class="nav-link active"  href="{{ route('home') }}">Home</a>
+  </li>
+<li class="nav-item">
+    <a class="nav-link "  href="{{route('s.seeAttendance')}}">Attendance</a>
+  </li>
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

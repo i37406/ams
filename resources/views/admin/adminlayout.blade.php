@@ -4,13 +4,16 @@
   <a class="nav-link active"  href="{{route('admin.route')}}">Home</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link active"  href="{{route('admin.leave')}}">Leave Applications</a>
+    <a class="nav-link active"  href="{{route('admin.leave')}}">Leaves</a>
   </li>
   <li class="nav-item">
     <a class="nav-link active"  href="{{route('admin.students')}}">Students</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link active"  href="{{route('admin.attendance')}}">Manage Attaendance</a>
+    <a class="nav-link active"  href="{{route('admin.attendance')}}">Attaendance</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active"  href="{{route('admin.reports')}}">Reports</a>
   </li>
 @endsection
 @section('content')
@@ -29,6 +32,8 @@
                            @section('p_content')
                            @show
                           </div>
+                          @section('admin_avatar')
+                          @show
                         </div>
                       </div>
                 </div>
@@ -36,6 +41,8 @@
         </div>
     </div>
 </div>
+@section('second_container')
+@show
 @endsection
 
 

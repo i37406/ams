@@ -29,7 +29,7 @@ Route::resource('attendance', AttendanceController::class);
 //Admin Routes
 //1. For Leave approve/disapprove use resource route of AttendanceController
 Route::get('admin/home', [App\Http\Controllers\HomeController::class, 'handleAdmin'])->name('admin.route')->middleware('admin');
-Route::get('admin/home/leaves', [App\Http\Controllers\HomeController::class, 'handleLeaves'])->name('admin.leave')->middleware('admin');
+Route::get('admin/leaves', [App\Http\Controllers\HomeController::class, 'handleLeaves'])->name('admin.leave')->middleware('admin');
 Route::get('admin/home/students', [App\Http\Controllers\HomeController::class, 'viewStudents'])->name('admin.students')->middleware('admin');
 Route::get('admin/home/manageAttendance', [App\Http\Controllers\HomeController::class, 'manageAttendance'])->name('admin.attendance')->middleware('admin');
 Route::post('admin/home/manageAttendance', [App\Http\Controllers\HomeController::class, 'populateAttendance'])->name('admin.populate')->middleware('admin');

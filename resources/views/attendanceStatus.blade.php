@@ -22,7 +22,9 @@
                           <tr>
                             <th>Total Present</th>
                             <th>Total Absent</th>
-                            <th>Total Leave</th>
+                            <th>Total Applied Leaves</th>
+                            <th>Approved Leaves</th>
+                            <th>Disapproved Leaves</th>
                             <th>Total Attendance</th>
                             
                           </tr>
@@ -35,6 +37,8 @@
                             <td>{{$index->present}}</td>
                             <td>{{$index->absent}}</td>
                             <td>{{$index->leav}}</td>
+                            <td>{{$index->a_leav}}</td>
+                            <td>{{$index->d_leav}}</td>
                             <td>{{$index->TotalAttendance}}</td>
                           </tr>
                           @empty

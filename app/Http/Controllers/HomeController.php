@@ -193,10 +193,23 @@ class HomeController extends Controller
         $data = User::join('attendances', 'user_id', '=', 'users.id')
                             ->select('users.name','users.id','attendances.attendance','attendances.attendance_date')
                             ->whereBetween('attendance_date', [$s_date, $e_date])
-                            ->orderBy('users.name')
+                            ->orderBy('attendance_date')
                             ->get()
                             ->groupBy('users.name');
-                            // dd($data);
+       
+        // $data = array();
+        
+        // $user_count = User::all()->count();
+        //     for ($i=1; $i <=$user_count ; $i++) { 
+        //         $userName = User::find($i)->name;
+        //         $query = User::find($i)->attends;
+        //         // $data = Arr::add(['username' => null, 'data' => null],'username',$userName,'data',$query);
+        //         $data = Arr::add(['username' => null],'username',$userName);
+        //         $data = Arr::add(['data' => null],'data',$query);
+        //         // $array = Arr::add(['name' => 'Desk', 'price' => null], 'price', 100);
+        //     }
+        //                     dd($data);
+        
         
         return view('admin.reportRange',compact(['data','str']));
        
@@ -212,7 +225,9 @@ class HomeController extends Controller
             ->selectRaw('COUNT(attendances.attendance) as TotalAttendance ')
             ->selectRaw("count(case when attendance = 'P' then 1 end) as present")
             ->selectRaw("count(case when attendance = 'A' then 1 end) as absent")
-            ->selectRaw("count(case when attendance = 'L' then 1 end) as leav")
+            ->selectRaw("count(case when leave_apply_status = '1' then 1 end) as leav")
+            ->selectRaw("count(case when leave_approved_status = '1' then 1 end) as a_leav")
+            ->selectRaw("count(case when leave_disapprove_status = '1' then 1 end) as d_leav")
             ->where('user_id',auth()->user()->id)
             ->groupBy('user_id')
             ->get();

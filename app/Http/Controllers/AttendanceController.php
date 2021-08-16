@@ -31,70 +31,80 @@ class AttendanceController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
+
     public function store(Request $request)
     {
-        //If marked by Admin
-        if(Arr::has($request, 's_id')){
-            // dd($request->all());
-            $check = DB::table('attendances')
-            ->where('user_id', '=',$request->s_id)
-            ->where('attendance_date', '=', today())
-            ->get();
-
-    if($check->isEmpty()){
         $data = new Attendance;
         if(Arr::has($request, 'attend')){
-            $data->attendance = $request->attend;
-            $message = "Present";
-        }else{               
-            $data->attendance = 'A';
-            $message = "Absent";                
-        } 
-        
-        $data->user_id = $request->s_id;
-        $data->attendance_date = today();
-        $data->save();
-        return redirect()->back()->with('message',$message.' Marked Successfully');
-        
-    }else{
-        return redirect()->back()->with('error','Today Attendance already marked. For further action you are able to update it.');
-    }
-        }
-        //if marked by student
-        else{
-        $check = DB::table('attendances')
-                ->where('user_id', '=', auth()->user()->id)
-                ->where('attendance_date', '=', today())
-                ->get();
-
-        if($check->isEmpty()){
-            $data = new Attendance;
-            if(Arr::has($request, 'attend')){
-                $data->attendance = $request->attend;
-                $message = "Present";
-            }else{               
-                $data->attendance = 'A';
-                $message = "Absent";                
-            } 
-            
-            $data->user_id = auth()->user()->id;
+            $data->attendance = $request->attend;} else {$data->attendance = 'A';}
             $data->attendance_date = today();
+        //if marked by admin
+        if(Arr::has($request, 's_id')){
+            $user_id= $request->s_id;
+            $data->user_id = $request->s_id;
+        }else{ //if marked by student
+            $user_id=auth()->user()->id;
+            $data->user_id = auth()->user()->id;
+        }
+        //if db contain record with today date
+        $check = DB::table('attendances')
+            ->where('user_id', '=',$user_id)
+            ->where('attendance_date', '=', today())
+            ->count();
+        if($check){ //yes db contain
+                //if user apply for leave but not approve/disaprove
+                if( $check = DB::table('attendances')
+                ->where('user_id', '=',$user_id)
+                ->where('attendance_date', '=', today())
+                ->where('leave_apply_status','1')
+                ->where('leave_approved_status','0')
+                ->where('leave_disapprove_status','0')
+                ->count()){
+                    return redirect(route('home'))->with('error','User apply for leave. Application is not Approved/Disapproved.');
+                }
+                //if user granted leave for today
+                else if( $check = DB::table('attendances')
+                ->where('user_id', '=',$user_id)
+                ->where('attendance_date', '=', today())
+                ->where('leave_apply_status','1')
+                ->where('leave_approved_status','1')
+                ->where('leave_disapprove_status','0')
+                ->count()){
+                    return redirect(route('home'))->with('error','User is on leave for today');
+                }
+                //if disapprove today leave
+                else if( $check = DB::table('attendances')
+                ->where('user_id', '=',$user_id)
+                ->where('attendance_date', '=', today())
+                ->where('leave_apply_status','1')
+                ->where('leave_approved_status','0')
+                ->where('leave_disapprove_status','1')
+                ->count()){
+                            $query = Attendance::where('user_id', '=',$user_id)
+                                                ->where('attendance_date', '=', today())
+                                                ->where('leave_apply_status','1')
+                                                ->where('leave_approved_status','0')
+                                                ->where('leave_disapprove_status','1')
+                                                ->update([
+                                                        'attendance' => $data->attendance
+                                                ]);
+                return redirect(route('home'))->with('message','User apply leave for today which is disapproved for some reason. Now '.$data->attendance.' Marked Successfully');
+                }
+                //if user already marked attendance for today
+                else if( $check = DB::table('attendances')
+                ->where('user_id', '=',$user_id)
+                ->where('attendance_date', '=', today())
+                ->where('leave_apply_status','0')
+                ->where('leave_approved_status','0')
+                ->where('leave_disapprove_status','0')
+                ->count()){
+                    return redirect(route('home'))->with('error','Attendance already marked for today');
+                }
+        }else{ //no not contain
             $data->save();
-            return redirect(route('home'))->with('message',$message.' Marked Successfully');
-            
-        }else{
-            return redirect(route('home'))->with('error','You Already Marked Attendance for Today');
-        }  
-        
-    }
-        
-        
+            return redirect(route('home'))->with('message',$data->attendance.' Marked Successfully');
+        }
     }
 
     /**
@@ -139,25 +149,25 @@ class AttendanceController extends Controller
             $data->attendance = $request->attend;
             $data->attendance_date = $request->date;
             $data->save();
-            return redirect(route('admin.populate'))->with('message','Updated Sucessfully!!');
+            return redirect(route('admin.leave'))->with('message','Updated Sucessfully!!');
         }else{
             //Approved Leaves
         if(Arr::has($request, ['approved','disaprove'])){
-            return redirect(route('admin.route'))->with('error','Please Select one choice at a time Approved or Disapproved.');
+            return redirect(route('admin.leave'))->with('error','Please Select one choice at a time Approved or Disapproved.');
         } else if(Arr::has($request, ['approved'])){
             $data = Attendance::find($id);
             $data->leave_approved_status = 1;
             $data->attendance = 'L';
             $data->save();
-            return redirect(route('admin.route'))->with('message','Approved successfully');       
+            return redirect(route('admin.leave'))->with('message','Approved successfully');       
         } else if(Arr::has($request, ['disaprove'])){
             $data = Attendance::find($id);
             $data->leave_disapprove_status = 1;
             $data->save();
-            return redirect(route('admin.route'))->with('message','Disapproved successfully');
+            return redirect(route('admin.leave'))->with('message','Disapproved successfully');
         }
         else{
-            return redirect(route('admin.route'))->with('error','Select one Approved/Disapproved');
+            return redirect(route('admin.leave'))->with('error','Select one Approved/Disapproved');
         }
     }
     }

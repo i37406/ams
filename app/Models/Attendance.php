@@ -21,7 +21,7 @@ class Attendance extends Model
         'attendance_date',
     ];
 
-    public function user()
+    public function user_relation()
     {
         return $this->belongsTo(User::class);
     }
